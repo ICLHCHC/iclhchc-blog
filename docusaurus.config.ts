@@ -28,7 +28,7 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
-
+  themes: ['@docusaurus/theme-live-codeblock'], // 交互式代码编辑器
   presets: [
     [
       'classic',
@@ -39,6 +39,14 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            remarkPlugins: [
+              // 命令行语法高亮插件
+              [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
+            ],
+            admonitions: { // 自定义警示类型组件，需要在 src/theme/Admonition/Types.js 中定义对应组件
+              keywords: ['my-custom-admonition'],
+              extendDefaults: true,
+            },
         },
         blog: {
           showReadingTime: true,
@@ -54,6 +62,17 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          remarkPlugins: [
+            [
+              // 命令行语法高亮插件
+              require('@docusaurus/remark-plugin-npm2yarn'),
+              {converters: ['pnpm']},
+            ],
+          ],
+        },
+        pages: {
+          // 命令行语法高亮插件
+          remarkPlugins: [require('@docusaurus/remark-plugin-npm2yarn')],
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -149,6 +168,19 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['java'],
+      magicComments: [
+        // Remember to extend the default highlight class name as well!
+        {
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: {start: 'highlight-start', end: 'highlight-end'},
+        },
+        { // 自定义魔法注释
+          className: 'code-block-error-line',
+          line: '这将出错',
+        },
+      ],
     },
   } satisfies Preset.ThemeConfig,
 };

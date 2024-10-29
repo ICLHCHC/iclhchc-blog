@@ -1,0 +1,854 @@
+---
+sidebar_position: 3
+id: code-blocks
+description: 在 Docusaurus Markdown 中处理代码块
+slug: /markdown-features/code-blocks
+---
+
+# 代码块
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import CodeBlock from '@theme/CodeBlock';
+
+代码块在文档中功能强大 💪。
+
+## 代码标题 {#code-title}
+
+您可以通过在语言后添加 `title` 键来为代码块添加标题（两者之间留一个空格）。
+
+````md
+```jsx title="/src/components/HelloCodeTitle.js"
+function HelloCodeTitle(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+```
+````
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```jsx title="/src/components/HelloCodeTitle.js"
+function HelloCodeTitle(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+## 语法高亮 {#syntax-highlighting}
+
+代码块是用三个反引号包裹的文本块。您可以查看 [此参考](https://github.com/mdx-js/specification) 来了解 MDX 的规范。
+
+````md
+```js
+console.log('每个仓库都必须配有吉祥物。');
+```
+````
+
+使用匹配的语言元字符串，Docusaurus 将自动启用语法高亮，支持 [Prism React Renderer](https://github.com/FormidableLabs/prism-react-renderer)。
+
+<BrowserWindow>
+
+```js
+console.log('每个仓库都必须配有吉祥物。');
+```
+
+</BrowserWindow>
+
+### 主题 {#theming}
+
+默认情况下，我们使用的 Prism [语法高亮主题](https://github.com/FormidableLabs/prism-react-renderer#theming) 是 [Palenight](https://github.com/FormidableLabs/prism-react-renderer/blob/master/packages/prism-react-renderer/src/themes/palenight.ts)。您可以通过在 `docusaurus.config.js` 中将 `theme` 字段传递给 `prism` 来更改为其他主题。
+
+例如，如果您希望使用 `dracula` 高亮主题：
+
+```js title="docusaurus.config.js"
+import {themes as prismThemes} from 'prism-react-renderer';
+
+export default {
+  themeConfig: {
+    prism: {
+      // highlight-next-line
+      theme: prismThemes.dracula,
+    },
+  },
+};
+```
+
+由于 Prism 主题只是一个 JS 对象，如果您对默认主题不满意，还可以编写自己的主题。Docusaurus 扩展了 `github` 和 `vsDark` 主题，以提供更丰富的高亮，您可以查看我们对 [light](https://github.com/facebook/docusaurus/blob/main/website/src/utils/prismLight.ts) 和 [dark](https://github.com/facebook/docusaurus/blob/main/website/src/utils/prismDark.ts) 代码块主题的实现。
+
+### 支持的语言 {#supported-languages}
+
+默认情况下，Docusaurus 带有一组 [常用语言](https://github.com/FormidableLabs/prism-react-renderer/blob/master/packages/generate-prism-languages/index.ts#L9-L23)。
+
+:::warning
+
+一些流行的语言，如 Java、C# 或 PHP，默认情况下并未启用。
+
+:::
+
+要为其他 [Prism 支持的语言](https://prismjs.com/#supported-languages) 添加语法高亮，请在额外语言的数组中定义它。
+
+:::note
+
+每个额外语言必须是有效的 Prism 组件名称。例如，Prism 将 _language_ `cs` 映射到 `csharp`，但只有 `prism-csharp.js` 作为 _component_ 存在，因此您需要使用 `additionalLanguages: ['csharp']`。您可以查看 `node_modules/prismjs/components` 找到所有可用的组件（语言）。
+
+:::
+
+例如，如果您想为 PowerShell 语言添加高亮：
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  themeConfig: {
+    prism: {
+      // highlight-next-line
+      additionalLanguages: ['powershell'],
+    },
+    // ...
+  },
+};
+```
+
+添加 `additionalLanguages` 后，重启 Docusaurus。
+
+如果您想为 Prism 尚未支持的语言添加高亮，可以 swizzle `prism-include-languages`：
+
+```bash npm2yarn
+npm run swizzle @docusaurus/theme-classic prism-include-languages
+```
+
+它将在您的 `src/theme` 文件夹中生成 `prism-include-languages.js`。您可以通过编辑 `prism-include-languages.js` 为自定义语言添加高亮支持：
+
+```js title="src/theme/prism-include-languages.js"
+const prismIncludeLanguages = (Prism) => {
+  // ...
+
+  additionalLanguages.forEach((lang) => {
+    require(`prismjs/components/prism-${lang}`);
+  });
+
+  // highlight-next-line
+  require('/path/to/your/prism-language-definition');
+
+  // ...
+};
+```
+
+在编写自己的语言定义时，您可以参考 [Prism 的官方语言定义](https://github.com/PrismJS/prism/tree/master/components)。
+
+添加自定义语言定义时，您无需将语言添加到 `additionalLanguages` 配置数组，因为 Docusaurus 仅在 Prism 提供的语言中查找 `additionalLanguages` 字符串。在 `prism-include-languages.js` 中添加语言导入就足够了。
+## 行高亮 {#line-highlighting}
+
+### 使用注释高亮 {#highlighting-with-comments}
+
+您可以使用 `highlight-next-line`、`highlight-start` 和 `highlight-end` 注释来选择高亮的行。
+
+````md
+```js
+function HighlightSomeText(highlight) {
+  if (highlight) {
+    // highlight-next-line
+    return '这段文字被高亮了！';
+  }
+
+  return '没有高亮';
+}
+
+function HighlightMoreText(highlight) {
+  // highlight-start
+  if (highlight) {
+    return '这一范围被高亮了！';
+  }
+  // highlight-end
+
+  return '没有高亮';
+}
+```
+````
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```js
+function HighlightSomeText(highlight) {
+  if (highlight) {
+    // highlight-next-line
+    return '这段文字被高亮了！';
+  }
+
+  return '没有高亮';
+}
+
+function HighlightMoreText(highlight) {
+  // highlight-start
+  if (highlight) {
+    return '这一范围被高亮了！';
+  }
+  // highlight-end
+
+  return '没有高亮';
+}
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+支持的注释语法：
+
+| 风格      | 语法                      |
+| ---------- | ------------------------- |
+| C 风格    | `/* ... */` 和 `// ...`  |
+| JSX 风格  | `{/* ... */}`            |
+| Bash 风格 | `# ...`                  |
+| HTML 风格 | `<!-- ... -->`           |
+
+我们会尽量根据语言推断使用哪种注释风格，并默认允许 _所有_ 注释风格。如果有不支持的注释风格，我们欢迎添加！拉取请求欢迎。请注意，不同的注释风格没有语义差异，只有其内容有所不同。
+
+您可以在 `src/css/custom.css` 中设置高亮代码行的背景色，以更好地与您选择的语法高亮主题相匹配。下面给出的颜色适用于默认的高亮主题（Palenight），如果您使用其他主题，需要相应调整颜色。
+
+```css title="/src/css/custom.css"
+:root {
+  --docusaurus-highlighted-code-line-bg: rgb(72, 77, 91);
+}
+
+/* 如果您有不同的深色模式语法高亮主题。 */
+[data-theme='dark'] {
+  /* 与深色模式语法高亮主题兼容的颜色 */
+  --docusaurus-highlighted-code-line-bg: rgb(100, 100, 100);
+}
+```
+
+如果您还需要以其他方式样式化高亮代码行，可以使用 `theme-code-block-highlighted-line` CSS 类进行针对性设置。
+
+### 使用元数据字符串高亮 {#highlighting-with-metadata-string}
+
+您还可以在语言元字符串中指定高亮行范围（在语言后留一个空格）。要高亮多行，请用逗号分隔行号，或使用范围语法选择一段行。这一特性使用 `parse-number-range` 库，您可以在其项目详情中找到 [更多语法](https://www.npmjs.com/package/parse-numeric-range)。
+
+````md
+```jsx {1,4-6,11}
+import React from 'react';
+
+function MyComponent(props) {
+  if (props.isBar) {
+    return <div>Bar</div>;
+  }
+
+  return <div>Foo</div>;
+}
+
+export default MyComponent;
+```
+````
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```jsx {1,4-6,11}
+import React from 'react';
+
+function MyComponent(props) {
+  if (props.isBar) {
+    return <div>Bar</div>;
+  }
+
+  return <div>Foo</div>;
+}
+
+export default MyComponent;
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+:::tip 优先使用注释
+
+尽可能优先使用注释进行高亮。通过在代码中内联高亮，当您的代码块变长时，不必手动计算行数。如果您添加/删除行，也无需调整行范围。
+
+````diff
+- ```jsx {3}
++ ```jsx {4}
+  function HighlightSomeText(highlight) {
+    if (highlight) {
++     console.log('找到了高亮文本');
+      return '这段文字被高亮了！';
+    }
+
+    return '没有高亮';
+  }
+  ```
+````
+
+接下来，我们将介绍如何扩展魔法注释系统以定义自定义指令及其功能。仅当不存在高亮元字符串时，魔法注释才会被解析。
+
+:::
+
+### 自定义魔法注释 {#custom-magic-comments}
+
+`// highlight-next-line` 和 `// highlight-start` 等被称为“魔法注释”，因为它们会被解析并移除，其目的是为下一行或由成对的起始和结束注释所包围的部分添加元数据。
+
+您可以通过主题配置声明自定义魔法注释。例如，您可以注册另一个魔法注释，以添加 `code-block-error-line` 类名：
+
+```mdx-code-block
+<Tabs>
+<TabItem value="docusaurus.config.js">
+```
+
+```js
+export default {
+  themeConfig: {
+    prism: {
+      magicComments: [
+        // 记得扩展默认高亮类名！
+        {
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: {start: 'highlight-start', end: 'highlight-end'},
+        },
+        // highlight-start
+        {
+          className: 'code-block-error-line',
+          line: '这将出错',
+        },
+        // highlight-end
+      ],
+    },
+  },
+};
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="src/css/custom.css">
+```
+
+```css
+.code-block-error-line {
+  background-color: #ff000020;
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid #ff000080;
+}
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="myDoc.md">
+```
+
+````md
+在 JavaScript 中，尝试访问 `null` 的属性将会出错。
+
+```js
+const name = null;
+// 这将出错
+console.log(name.toUpperCase());
+// Uncaught TypeError: Cannot read properties of null (reading 'toUpperCase')
+```
+````
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+在 JavaScript 中，尝试访问 `null` 的属性将会出错。
+
+```js
+const name = null;
+// 这将出错
+console.log(name.toUpperCase());
+// Uncaught TypeError: Cannot read properties of null (reading 'toUpperCase')
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+如果您在元字符串中使用数字范围（`{1,3-4}` 语法），Docusaurus 将应用 **第一个 `magicComments` 条目** 的类名。默认情况下，这是 `theme-code-block-highlighted-line`，但如果您更改 `magicComments` 配置并使用不同的条目作为第一个，则元字符串范围的含义也会改变。
+
+您可以通过 `magicComments: []` 禁用默认的行高亮注释。如果没有魔法注释配置，但 Docusaurus 遇到包含元字符串范围的代码块，将会报错，因为没有类名可应用——毕竟，高亮类名只是一个魔法注释条目。
+
+每个魔法注释条目将包含三个键：`className`（必需）、`line`（应用于直接下一行）或 `block`（包含 `start` 和 `end`，应用于由两个注释包围的整个块）。
+
+使用 CSS 针对该类可以做很多事情，但您可以通过 [swizzling](../../swizzling.mdx) 解锁此功能的全部潜力。
+
+```bash npm2yarn
+npm run swizzle @docusaurus/theme-classic CodeBlock/Line
+```
+
+`Line` 组件将接收类名列表，您可以基于这些类名条件渲染不同的标记。
+
+## 行号 {#line-numbering}
+
+您可以通过在语言元字符串中使用 `showLineNumbers` 关键字来启用代码块的行号（在该关键字前面请记得添加空格）。
+
+````md
+```jsx {1,4-6,11} showLineNumbers
+import React from 'react';
+
+function MyComponent(props) {
+  if (props.isBar) {
+    return <div>Bar</div>;
+  }
+
+  return <div>Foo</div>;
+}
+
+export default MyComponent;
+```
+````
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```jsx {1,4-6,11} showLineNumbers
+import React from 'react';
+
+function MyComponent(props) {
+  if (props.isBar) {
+    return <div>Bar</div>;
+  }
+
+  return <div>Foo</div>;
+}
+
+export default MyComponent;
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+## 交互式代码编辑器 {#interactive-code-editor}
+
+（由 [React Live](https://github.com/FormidableLabs/react-live) 提供支持）
+
+您可以使用 `@docusaurus/theme-live-codeblock` 插件创建交互式代码编辑器。首先，将插件添加到您的包中。
+
+```bash npm2yarn
+npm install --save @docusaurus/theme-live-codeblock
+```
+
+您还需要将该插件添加到 `docusaurus.config.js` 中。
+
+```js {3}
+export default {
+  // ...
+  themes: ['@docusaurus/theme-live-codeblock'],
+  // ...
+};
+```
+
+要使用该插件，创建一个代码块，并在语言元字符串中附加 `live`。
+
+````md
+```jsx live
+function Clock(props) {
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
+  return (
+    <div>
+      <h2>It is {date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
+```
+````
+
+该代码块将作为交互式编辑器呈现。代码的更改将实时反映在结果面板上。
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```jsx live
+function Clock(props) {
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
+  return (
+    <div>
+      <h2>现在是 {date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+### 导入 {#imports}
+
+:::warning react-live 和导入
+
+无法直接从 react-live 代码编辑器导入组件，您必须提前定义可用的导入。
+
+:::
+
+默认情况下，所有 React 导入都是可用的。如果您需要更多的导入，可以 swizzle react-live 范围：
+
+```bash npm2yarn
+npm run swizzle @docusaurus/theme-live-codeblock ReactLiveScope -- --eject
+```
+
+```jsx title="src/theme/ReactLiveScope/index.js"
+import React from 'react';
+
+// highlight-start
+const ButtonExample = (props) => (
+  <button
+    {...props}
+    style={{
+      backgroundColor: 'white',
+      color: 'black',
+      border: 'solid red',
+      borderRadius: 20,
+      padding: 10,
+      cursor: 'pointer',
+      ...props.style,
+    }}
+  />
+);
+// highlight-end
+
+// 在这里添加您需要的 react-live 导入
+const ReactLiveScope = {
+  React,
+  ...React,
+  // highlight-next-line
+  ButtonExample,
+};
+
+export default ReactLiveScope;
+```
+
+`ButtonExample` 组件现在可供使用：
+
+```mdx-code-block
+<BrowserWindow>
+```
+
+```jsx live
+function MyPlayground(props) {
+  return (
+    <div>
+      <ButtonExample onClick={() => alert('hey!')}>Click me</ButtonExample>
+    </div>
+  );
+}
+```
+
+```mdx-code-block
+</BrowserWindow>
+```
+
+### 命令式渲染 (noInline)
+
+`noInline` 选项应在您的代码跨越多个组件或变量时使用，以避免错误。
+
+````md
+```jsx live noInline
+const project = 'Docusaurus';
+
+const Greeting = () => <p>Hello {project}!</p>;
+
+render(<Greeting />);
+```
+````
+
+与普通交互式代码块不同，当使用 `noInline` 时，React Live 不会将您的代码包裹在一个内联函数中以进行渲染。
+
+您需要在代码末尾显式调用 `render()` 来显示输出。
+
+````mdx-code-block
+<BrowserWindow>
+
+```jsx live noInline
+const project = "Docusaurus";
+
+const Greeting = () => (
+  <p>Hello {project}!</p>
+);
+
+render(
+  <Greeting />
+);
+```
+
+</BrowserWindow>
+````
+
+## 在代码块中使用 JSX 标记 {#using-jsx-markup}
+
+Markdown 中的代码块始终将其内容保留为纯文本，这意味着您不能像这样做：
+
+```ts
+type EditUrlFunction = (params: {
+  // 这不会变成链接（有充分理由！）
+  version: <a href="/docs/versioning">Version</a>;
+  versionDocsDirPath: string;
+  docPath: string;
+  permalink: string;
+  locale: string;
+}) => string | undefined;
+```
+
+如果您想嵌入 HTML 标记，例如锚链接或加粗文本，您可以使用 `<pre>` 标签、`<code>` 标签或 `<CodeBlock>` 组件。
+
+```jsx
+<pre>
+  <b>Input: </b>1 2 3 4{'\n'}
+  <b>Output: </b>"366300745"{'\n'}
+</pre>
+```
+
+<BrowserWindow>
+  <pre>
+    <b>{'Input: '}</b>
+    {'1 2 3 4\n'}
+    <b>{'Output: '}</b>
+    {'"366300745"\n'}
+  </pre>
+</BrowserWindow>
+
+:::warning MDX 对空格不敏感
+
+MDX 与 JSX 的行为一致：即使在 `<pre>` 内部，换行符也会变成空格。您必须显式写出换行符，以便它被打印出来。
+
+:::
+
+:::warning
+
+语法高亮仅在纯字符串上有效。Docusaurus 不会尝试解析包含 JSX 子元素的代码块内容。
+
+:::
+
+## 多语言支持的代码块 {#multi-language-support-code-blocks}
+
+使用 MDX，您可以轻松地在文档中创建交互式组件，例如，用于以多种编程语言显示代码，并通过选项卡组件进行切换。
+
+我们在经典主题中实现了一个通用的 [`<Tabs>`](./markdown-features-tabs.mdx) 组件，以便您可以将其用于其他非代码场景，而不是实现专门的多语言支持代码块组件。
+
+以下示例演示了如何在文档中实现多语言代码选项卡。请注意，每个语言块上方和下方的空行是 **故意的**。这是 MDX 的 [当前限制](./markdown-features-react.mdx#markdown-and-jsx-interoperability)：您必须在 Markdown 语法周围留出空行，以便 MDX 解析器知道它是 Markdown 语法，而不是 JSX。
+
+````jsx
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```js
+function helloWorld() {
+  console.log('Hello, world!');
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def hello_world():
+  print("Hello, world!")
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+class HelloWorld {
+  public static void main(String args[]) {
+    System.out.println("Hello, World");
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+````
+
+您将获得以下结果：
+
+```mdx-code-block
+<BrowserWindow>
+<Tabs>
+<TabItem value="js" label="JavaScript">
+```
+
+```js
+function helloWorld() {
+  console.log('Hello, world!');
+}
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="py" label="Python">
+```
+
+```py
+def hello_world():
+  print("Hello, world!")
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="java" label="Java">
+```
+
+```java
+class HelloWorld {
+  public static void main(String args[]) {
+    System.out.println("Hello, World");
+  }
+}
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+</BrowserWindow>
+```
+
+如果您有多个这样的多语言代码选项卡，并且想要在选项卡实例之间同步选择，请参考 [同步选项卡选择部分](markdown-features-tabs.mdx#syncing-tab-choices)。
+
+### Docusaurus npm2yarn remark 插件 {#npm2yarn-remark-plugin}
+
+在 npm 和 Yarn 中显示 CLI 命令是一种非常常见的需求，例如：
+
+```bash npm2yarn
+npm install @docusaurus/remark-plugin-npm2yarn
+```
+
+Docusaurus 提供了这样的实用工具，免去了您每次都使用 `Tabs` 组件的麻烦。要启用此功能，首先按照上面的方式安装 `@docusaurus/remark-plugin-npm2yarn` 包，然后在 `docusaurus.config.js` 中，对于需要此功能的插件（文档、博客、页面等），将其注册到 `remarkPlugins` 选项中。（有关配置格式的更多详细信息，请参见 [Docs configuration](../../api/plugins/plugin-content-docs.mdx#ex-config)）
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          // highlight-start
+          remarkPlugins: [
+            [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
+          ],
+          // highlight-end
+        },
+        pages: {
+          // highlight-next-line
+          remarkPlugins: [require('@docusaurus/remark-plugin-npm2yarn')],
+        },
+        blog: {
+          // highlight-start
+          remarkPlugins: [
+            [
+              require('@docusaurus/remark-plugin-npm2yarn'),
+              {converters: ['pnpm']},
+            ],
+          ],
+          // highlight-end
+          // ...
+        },
+      },
+    ],
+  ],
+};
+```
+
+然后通过将 `npm2yarn` 键添加到代码块中使用它：
+
+````md
+```bash npm2yarn
+npm install @docusaurus/remark-plugin-npm2yarn
+```
+````
+
+#### 配置 {#npm2yarn-remark-plugin-configuration}
+
+| 选项       | 类型       | 默认值       | 描述                         |
+|------------|------------|--------------|------------------------------|
+| `sync`     | `boolean`  | `false`      | 是否在所有代码块中同步选择的转换器。 |
+| `converters` | `array`  | `'yarn'`, `'pnpm'` | 使用的转换器列表。转换器的顺序很重要，因为第一个转换器将用作默认选择。 |
+
+## 在 JSX 中的使用 {#usage-in-jsx}
+
+在 Markdown 之外，您可以使用 `@theme/CodeBlock` 组件获得相同的输出。
+
+```jsx
+import CodeBlock from '@theme/CodeBlock';
+
+export default function MyReactPage() {
+  return (
+    <div>
+      {/* highlight-start */}
+      <CodeBlock
+        language="jsx"
+        title="/src/components/HelloCodeTitle.js"
+        showLineNumbers>
+        {`function HelloCodeTitle(props) {
+  return <h1>Hello, {props.name}</h1>;
+}`}
+      </CodeBlock>
+      {/* highlight-end */}
+    </div>
+  );
+}
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <CodeBlock
+    language="jsx"
+    title="/src/components/HelloCodeTitle.js"
+    showLineNumbers>
+    {`function HelloCodeTitle(props) {
+  return <h1>Hello, {props.name}</h1>;
+}`}
+  </CodeBlock>
+</BrowserWindow>
+```
+
+接受的 props 包括 `language`、`title` 和 `showLineNumbers`，与您在 Markdown 代码块中书写的方式相同。
+
+虽然不推荐，但您也可以传入一个 `metastring` prop，例如 `metastring='{1-2} title="/src/components/HelloCodeTitle.js" showLineNumbers'`，这就是 Markdown 代码块在后台的处理方式。不过，我们建议您 [使用注释来高亮行](#highlighting-with-comments)。
+
+正如 [之前所述](#using-jsx-markup)，只有当子元素是简单字符串时，才会应用语法高亮。

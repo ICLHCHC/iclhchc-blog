@@ -1,0 +1,380 @@
+---
+sidebar_position: 2
+id: tabs  
+description: 在 Docusaurus Markdown 中使用标签  
+slug: /markdown-features/tabs  
+---
+
+# 标签
+
+```mdx-code-block
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import styles from './markdown-features-tabs-styles.module.css';
+```
+
+Docusaurus 提供了 `<Tabs>` 组件，可以通过 [MDX](./markdown-features-react.mdx) 在 Markdown 中使用：
+
+{/* prettier-ignore */}
+```jsx
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="apple" label="苹果" default>
+    这是一个苹果 🍎
+  </TabItem>
+  <TabItem value="orange" label="橙子">
+    这是一个橙子 🍊
+  </TabItem>
+  <TabItem value="banana" label="香蕉">
+    这是一个香蕉 🍌
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs>
+    <TabItem value="apple" label="苹果">这是一个苹果 🍎</TabItem>
+    <TabItem value="orange" label="橙子">这是一个橙子 🍊</TabItem>
+    <TabItem value="banana" label="香蕉">这是一个香蕉 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+---
+
+您还可以为 `Tabs` 提供 `values` 和 `defaultValue` 属性：
+
+```jsx
+<Tabs
+  defaultValue="apple"
+  values={[
+    {label: '苹果', value: 'apple'},
+    {label: '橙子', value: 'orange'},
+    {label: '香蕉', value: 'banana'},
+  ]}>
+  <TabItem value="apple">这是一个苹果 🍎</TabItem>
+  <TabItem value="orange">这是一个橙子 🍊</TabItem>
+  <TabItem value="banana">这是一个香蕉 🍌</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs
+    defaultValue="apple"
+    values={[
+      {label: '苹果', value: 'apple'},
+      {label: '橙子', value: 'orange'},
+      {label: '香蕉', value: 'banana'},
+    ]}>
+    <TabItem value="apple">这是一个苹果 🍎</TabItem>
+    <TabItem value="orange">这是一个橙子 🍊</TabItem>
+    <TabItem value="banana">这是一个香蕉 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+<details>
+  <summary><code>Tabs</code> 属性优先于 <code>TabItem</code> 属性：</summary>
+
+```jsx
+<Tabs
+  defaultValue="apple"
+  values={[
+    {label: '苹果 1', value: 'apple'},
+    {label: '橙子 1', value: 'orange'},
+    {label: '香蕉 1', value: 'banana'},
+  ]}>
+  <TabItem value="apple" label="苹果 2">
+    这是一个苹果 🍎
+  </TabItem>
+  <TabItem value="orange" label="橙子 2">
+    这是一个橙子 🍊
+  </TabItem>
+  <TabItem value="banana" label="香蕉 2" default>
+    这是一个香蕉 🍌
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs
+    defaultValue="apple"
+    values={[
+      {label: '苹果 1', value: 'apple'},
+      {label: '橙子 1', value: 'orange'},
+      {label: '香蕉 1', value: 'banana'},
+    ]}>
+    <TabItem value="apple" label="苹果 2">这是一个苹果 🍎</TabItem>
+    <TabItem value="orange" label="橙子 2">这是一个橙子 🍊</TabItem>
+    <TabItem value="banana" label="香蕉 2" default>这是一个香蕉 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+</details>
+
+:::tip
+
+默认情况下，所有标签在构建过程中会被预先渲染，搜索引擎可以索引隐藏的标签。
+
+可以通过 `<Tabs lazy />` 只渲染默认标签。
+
+:::
+
+
+## 显示默认标签 {#displaying-a-default-tab}
+
+第一个标签默认显示，如果要覆盖此行为，可以通过在某个标签项中添加 `default` 来指定默认标签。您也可以将 `Tabs` 组件的 `defaultValue` 属性设置为您选择的标签值。例如，在上面的示例中，设置 `value="apple"` 的标签为 `default`，或者将 `defaultValue="apple"` 设置为标签都会强制“苹果”标签默认打开。
+
+如果为 `Tabs` 提供了 `defaultValue` 但它指向一个不存在的值，Docusaurus 会抛出错误。如果您希望没有标签默认显示，请使用 `defaultValue={null}`。
+
+## 同步标签选择 {#syncing-tab-choices}
+
+您可能希望相同类型的标签之间的选择保持同步。例如，您可能希望为 Windows 用户与 macOS 用户提供不同的说明，并希望通过一次点击更改所有特定于操作系统的说明标签。为实现此目的，您可以给所有相关标签赋予相同的 `groupId` 属性。请注意，这样做会在 `localStorage` 中保存选择，并且所有具有相同 `groupId` 的 `<Tab>` 实例将在其中一个的值发生变化时自动更新。请注意，组 ID 是全局命名的。
+
+```jsx
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">使用 Ctrl + C 复制。</TabItem>
+  <TabItem value="mac" label="macOS">使用 Command + C 复制。</TabItem>
+</Tabs>
+
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">使用 Ctrl + V 粘贴。</TabItem>
+  <TabItem value="mac" label="macOS">使用 Command + V 粘贴。</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">使用 Ctrl + C 复制。</TabItem>
+    <TabItem value="mac" label="macOS">使用 Command + C 复制。</TabItem>
+  </Tabs>
+
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">使用 Ctrl + V 粘贴。</TabItem>
+    <TabItem value="mac" label="macOS">使用 Command + V 粘贴。</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+对于所有具有相同 `groupId` 的标签组，可能的值不需要相同。如果一个标签组选择了一个在另一个同一 `groupId` 的标签组中不存在的值，则缺少值的标签组不会更改其标签。您可以通过以下示例看到这一点。尝试选择 Linux，以上标签组不会改变。
+
+```jsx
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">
+    我是 Windows。
+  </TabItem>
+  <TabItem value="mac" label="macOS">
+    我是 macOS。
+  </TabItem>
+  <TabItem value="linux" label="Linux">
+    我是 Linux。
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">我是 Windows。</TabItem>
+    <TabItem value="mac" label="macOS">我是 macOS。</TabItem>
+    <TabItem value="linux" label="Linux">我是 Linux。</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+---
+
+不同组 ID 的标签选择不会相互干扰：
+
+```jsx
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Windows 在 Windows 中。</TabItem>
+  <TabItem value="mac" label="macOS">macOS 是 macOS。</TabItem>
+</Tabs>
+
+// highlight-next-line
+<Tabs groupId="non-mac-operating-systems">
+  <TabItem value="win" label="Windows">Windows 是 Windows。</TabItem>
+  <TabItem value="unix" label="Unix">Unix 是 Unix。</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">Windows 在 Windows 中。</TabItem>
+    <TabItem value="mac" label="macOS">macOS 是 macOS。</TabItem>
+  </Tabs>
+
+  <Tabs groupId="non-mac-operating-systems">
+    <TabItem value="win" label="Windows">Windows 是 Windows。</TabItem>
+    <TabItem value="unix" label="Unix">Unix 是 Unix。</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+## 自定义标签 {#customizing-tabs}
+
+翻译如下：
+
+您可能希望自定义某一组标签的外观。您可以在 `className` 属性中传递字符串，指定的 CSS 类将添加到 `Tabs` 组件中：
+
+```jsx
+// highlight-next-line
+<Tabs className="unique-tabs">
+  <TabItem value="Apple">这是一个苹果 🍎</TabItem>
+  <TabItem value="Orange">这是一个橙子 🍊</TabItem>
+  <TabItem value="Banana">这是一个香蕉 🍌</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs className="unique-tabs">
+    <TabItem value="Apple">这是一个苹果 🍎</TabItem>
+    <TabItem value="Orange">这是一个橙子 🍊</TabItem>
+    <TabItem value="Banana">这是一个香蕉 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+### 自定义标签标题 {#customizing-tab-headings}
+
+您还可以通过使用 `attributes` 字段独立自定义每个标签的标题。可以通过 `Tabs` 中的 `values` 属性或每个 `TabItem` 的属性传递额外的属性——就像声明 `label` 一样。
+
+{/* prettier-ignore */}
+```jsx title="some-doc.mdx"
+import styles from './styles.module.css';
+
+<Tabs>
+  <TabItem value="apple" label="Apple" attributes={{className: styles.red}}>
+    这是一个苹果 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange" attributes={{className: styles.orange}}>
+    这是一个橙子 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana" attributes={{className: styles.yellow}}>
+    这是一个香蕉 🍌
+  </TabItem>
+</Tabs>
+```
+
+```css title="styles.module.css"
+.red {
+  color: red;
+}
+.red[aria-selected='true'] {
+  border-bottom-color: red;
+}
+
+.orange {
+  color: orange;
+}
+.orange[aria-selected='true'] {
+  border-bottom-color: orange;
+}
+
+.yellow {
+  color: yellow;
+}
+.yellow[aria-selected='true'] {
+  border-bottom-color: yellow;
+}
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs>
+    <TabItem value="apple" label="Apple" attributes={{className: styles.red}}>
+      这是一个苹果 🍎
+    </TabItem>
+    <TabItem value="orange" label="Orange" attributes={{className: styles.orange}}>
+      这是一个橙子 🍊
+    </TabItem>
+    <TabItem value="banana" label="Banana" attributes={{className: styles.yellow}}>
+      这是一个香蕉 🍌
+    </TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+:::tip
+
+`className` 会与其他默认类名合并。您还可以使用自定义的 `data-value` 字段 (`{'data-value': 'apple'}`) 配合 CSS 属性选择器：
+
+```css title="styles.module.css"
+li[role='tab'][data-value='apple'] {
+  color: red;
+}
+```
+
+:::
+
+## 查询字符串 {#query-string}
+
+可以将选定的标签持久化到 URL 的搜索参数中。这使您能够共享一个链接，该链接预先选择了标签——例如，从您的 Android 应用链接到预选 Android 标签的文档。此功能并不提供锚链接——浏览器不会滚动到标签处。
+
+使用 `queryString` 属性来启用此功能并定义要使用的搜索参数名称。
+
+```tsx
+// highlight-next-line
+<Tabs queryString="current-os">
+  <TabItem value="android" label="Android">
+    Android
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+    iOS
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs queryString='current-os'>
+    <TabItem value="android" label="Android">Android</TabItem>
+    <TabItem value="ios" label="iOS">iOS</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+一旦点击某个标签，搜索参数会被添加到 URL 的末尾：`?current-os=android` 或 `?current-os=ios`。
+
+:::tip
+
+`queryString` 可以与 `groupId` 一起使用。
+
+为了方便，当 `queryString` 属性为 `true` 时，`groupId` 的值将作为备用使用。
+
+```tsx
+// highlight-next-line
+<Tabs groupId="current-os" queryString>
+  <TabItem value="android" label="Android">
+    Android
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+    iOS
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs queryString groupId="current-os">
+    <TabItem value="android" label="Android">Android</TabItem>
+    <TabItem value="ios" label="iOS">iOS</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+当页面加载时，标签查询字符串的选择将优先于 `groupId` 的选择（使用 `localStorage`）。
