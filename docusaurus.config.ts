@@ -1,7 +1,14 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-
+// 命令行语法高亮
+import npm2yarn from '@docusaurus/remark-plugin-npm2yarn';
+// 数学公式支持
+// remark 用于提取公式并将其转换为 <span> 标签，rehype 用于渲染转换后的公式（<span>）
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+// 使用自定义的 MDX 插件
+import sectionPrefix from './src/remark/section-prefix';
 const config: Config = {
   title: '我的网站',
   tagline: '恐龙很酷🦕',
@@ -39,14 +46,20 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-            remarkPlugins: [
-              // 命令行语法高亮插件
-              [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
-            ],
-            admonitions: { // 自定义警示类型组件，需要在 src/theme/Admonition/Types.js 中定义对应组件
-              keywords: ['my-custom-admonition'],
-              extendDefaults: true,
-            },
+          remarkPlugins: [
+            // 命令行语法高亮
+            [npm2yarn, { sync: true }],
+            // 数学公式支持
+            remarkMath
+          ],
+          rehypePlugins: [
+            // 数学公式支持
+            [rehypeKatex, {strict: false}],
+          ],
+          admonitions: { // 自定义警示类型组件，需要在 src/theme/Admonition/Types.js 中定义对应组件
+            keywords: ['my-custom-admonition'],
+            extendDefaults: true,
+          },
         },
         blog: {
           showReadingTime: true,
@@ -62,12 +75,15 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          // beforeDefaultRemarkPlugins: [sectionPrefix],
           remarkPlugins: [
+            // 命令行语法高亮插件
             [
-              // 命令行语法高亮插件
               require('@docusaurus/remark-plugin-npm2yarn'),
-              {converters: ['pnpm']},
+              { converters: ['pnpm'] },
             ],
+            // 自定义 MDX 插件
+            // sectionPrefix,
           ],
         },
         pages: {
@@ -80,7 +96,15 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-
+  stylesheets: [
+    { // 设置 KaTeX 渲染公式的样式
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -180,7 +204,7 @@ const config: Config = {
         {
           className: 'theme-code-block-highlighted-line',
           line: 'highlight-next-line',
-          block: {start: 'highlight-start', end: 'highlight-end'},
+          block: { start: 'highlight-start', end: 'highlight-end' },
         },
         { // 自定义魔法注释
           className: 'code-block-error-line',

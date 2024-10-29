@@ -1,0 +1,202 @@
+---
+sidebar_position: 9
+id: math-equations
+description: 编写 LaTeX 数学公式
+slug: /markdown-features/math-equations
+---
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+# 数学公式
+
+使用 [KaTeX](https://katex.org) 可以渲染数学公式。
+
+## 使用方法 {#usage}
+
+请阅读 [KaTeX](https://katex.org) 文档以获取更多细节。
+
+### 行内公式 {#inline}
+
+通过用 `$` 包裹 LaTeX 公式来编写行内数学公式：
+
+```latex
+设 $f\colon[a,b]\to\R$ 是 Riemann 可积的。设 $F\colon[a,b]\to\R$ 为
+$F(x)=\int_{a}^{x} f(t)\,dt$。那么 $F$ 是连续的，并且在所有 $f$ 在 $x$ 处连续的 $x$ 中，$F$ 在 $x$ 处可微，且 $F'(x)=f(x)$。
+```
+
+<BrowserWindow>
+
+设 $f\colon[a,b] \to \R$ 是 Riemann 可积的。设 $F\colon[a,b]\to\R$ 为 $F(x)=
+\int_{a}^{x} f(t)\,dt$。那么 $F$ 是连续的，并且在所有 $f$ 在 $x$ 处连续的 $x$ 中，$F$ 在 $x$ 处可微，且 $F'(x)=f(x)$。
+
+</BrowserWindow>
+
+### 块级公式 {#blocks}
+
+对于公式块或显示模式，使用换行和 `$$`：
+
+```latex
+$$
+I = \int_0^{2\pi} \sin(x)\,dx
+$$
+```
+
+<BrowserWindow>
+
+$$
+I = \int_0^{2\pi} \sin(x)\,dx
+$$
+
+</BrowserWindow>
+
+## 启用数学公式 {#configuration}
+
+启用 KaTeX：
+
+1.  安装 `remark-math` 和 `rehype-katex` 插件：
+
+    ```bash npm2yarn
+    npm install --save remark-math@6 rehype-katex@7
+    ```
+
+    :::warning
+
+    请确保在 Docusaurus v3（使用 MDX v3）中使用 `remark-math 6` 和 `rehype-katex 7`。我们无法保证其他版本能够正常工作。
+
+    :::
+
+2.  这两个插件[**仅以 ES 模块形式提供**](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)。我们建议使用一个[**ES 模块**](https://flaviocopes.com/es-modules/)配置文件：
+
+    ```js title="ES 模块 docusaurus.config.js"
+    // highlight-start
+    import remarkMath from 'remark-math';
+    import rehypeKatex from 'rehype-katex';
+    // highlight-end
+
+    // highlight-start
+    export default {
+      presets: [
+        [
+          '@docusaurus/preset-classic',
+          {
+            docs: {
+              path: 'docs',
+              // highlight-start
+              remarkPlugins: [remarkMath],
+              rehypePlugins: [rehypeKatex],
+              // highlight-end
+            },
+          },
+        ],
+      ],
+    };
+    ```
+
+        <details>
+
+    <summary>
+      使用
+      [**CommonJS**](https://nodejs.org/api/modules.html#modules-commonjs-modules)
+      配置文件？
+    </summary>
+
+            如果你决定使用 CommonJS 配置文件，可以通过动态导入和异步配置创建函数加载这些 ES 模块插件：
+
+    ```js title="CommonJS 模块 docusaurus.config.js"
+    // highlight-start
+    module.exports = async function createConfigAsync() {
+      // highlight-end
+      return {
+        presets: [
+          [
+            '@docusaurus/preset-classic',
+            {
+              docs: {
+                path: 'docs',
+                // highlight-start
+                remarkPlugins: [(await import('remark-math')).default],
+                rehypePlugins: [(await import('rehype-katex')).default],
+                // highlight-end
+              },
+            },
+          ],
+        ],
+      };
+    };
+    ```
+
+        </details>
+
+3.  在你的配置文件中的 `stylesheets` 下包含 KaTeX CSS：
+
+    ```js
+    export default {
+      //...
+      stylesheets: [
+        {
+          href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+          type: 'text/css',
+          integrity:
+            'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+          crossorigin: 'anonymous',
+        },
+      ],
+    };
+    ```
+
+<details>
+<summary>查看配置文件示例</summary>
+
+```js title="docusaurus.config.js"
+// highlight-start
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+// highlight-end
+
+export default {
+  title: 'Docusaurus',
+  tagline: '快速构建优化的网站，专注于内容',
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          path: 'docs',
+          // highlight-start
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
+          // highlight-end
+        },
+      },
+    ],
+  ],
+  // highlight-start
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
+  // highlight-end
+};
+```
+
+</details>
+
+## 自托管 KaTeX 资源 {#self-hosting-katex-assets}
+
+从 CDN 源加载样式表、字体和 JavaScript 库是常见的做法，因为这减少了需要托管的资源数量。如果你更喜欢自托管 `katex.min.css`（以及所需的 KaTeX 字体），你可以从 [KaTeX GitHub releases](https://github.com/KaTeX/KaTeX/releases) 下载最新版本，提取并将 `katex.min.css` 和 `fonts` 目录（仅需 `.woff2` 字体类型即可）复制到你网站的 `static` 目录中，然后在 `docusaurus.config.js` 中将样式表的 `href` 从 CDN URL 替换为本地路径（例如，`/katex/katex.min.css`）。
+
+```js title="docusaurus.config.js"
+export default {
+  stylesheets: [
+    {
+      href: '/katex/katex.min.css',
+      type: 'text/css',
+    },
+  ],
+};
+```
