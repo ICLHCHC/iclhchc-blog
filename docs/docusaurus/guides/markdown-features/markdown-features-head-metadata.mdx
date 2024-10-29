@@ -1,0 +1,83 @@
+---
+sidebar_position: 11
+id: head-metadata
+description: 通过 MDX 声明特定页面的头部元数据
+slug: /markdown-features/head-metadata
+---
+
+# 头部元数据
+
+## 自定义头部元数据 {#customizing-head-metadata}
+
+Docusaurus 会自动为你设置有用的页面元数据在 `<html>`、`<head>` 和 `<body>` 中。你可以通过 Markdown 文件中的 `<head>` 标签添加额外的元数据（或覆盖现有元数据）：
+
+```md title="markdown-features-head-metadata.mdx"
+---
+id: head-metadata
+title: 头部元数据
+---
+
+<!-- highlight-start -->
+<head>
+  <html className="some-extra-html-class" />
+  <body className="other-extra-body-class" />
+  <title>自定义的头部元数据标题!</title>
+  <meta charSet="utf-8" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://docusaurus.io/docs/markdown-features/head-metadata" />
+</head>
+<!-- highlight-end -->
+
+# 头部元数据
+
+我的文本
+```
+
+```mdx-code-block
+<head>
+  <html className="some-extra-html-class" />
+  <body className="other-extra-body-class" />
+  <title>自定义的头部元数据标题!</title>
+  <meta charSet="utf-8" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://docusaurus.io/docs/markdown-features/head-metadata" />
+</head>
+```
+
+这个 `<head>` 声明已作为示例添加到当前的 Markdown 文档中。打开浏览器的开发者工具，检查该页面的元数据如何受到影响。
+
+:::note
+
+此功能基于 Docusaurus 的 [`<Head>`](./../../docusaurus-core.mdx#head) 组件。有关详细文档，请参考 [react-helmet](https://github.com/nfl/react-helmet)。
+
+:::
+
+:::tip 你不需要为了常规 SEO 而使用这个
+
+内容插件（例如文档和博客）提供了诸如 `description`、`keywords` 和 `image` 的前置选项，这些选项会自动应用到 `description` 和 `og:description` 中，而使用 `<head>` 标签时，你需要手动声明两个元数据标签。
+
+:::
+
+## Markdown 页面描述 {#markdown-page-description}
+
+Markdown 页面描述元数据可以在比头部元数据更多的地方使用。例如，文档插件的 [生成的分类索引](../docs/sidebar/items.mdx#generated-index-page) 使用文档卡片的描述元数据。
+
+默认情况下，描述是内容的第一行，并经过一些处理转化为纯文本。例如，以下文件...
+
+```md
+# 标题
+
+主要内容... 可能包含一些 [链接](./file.mdx) 或 **强调**。
+```
+
+...将会生成默认描述 "主要内容... 可能包含一些链接或强调"。然而，**这并不设计为完全功能的**。在生成合理描述失败的情况下，你可以通过前置参数显式提供一个描述：
+
+```md
+---
+description: 这个描述将覆盖默认值。
+---
+
+# 标题
+
+主要内容... 可能包含一些 [链接](./file.mdx) 或 **强调**。
+```

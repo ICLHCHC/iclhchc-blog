@@ -20,6 +20,9 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
+  markdown: {
+    mermaid: true,
+  },
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'facebook', // Usually your GitHub org/user name.
@@ -35,7 +38,9 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
-  themes: ['@docusaurus/theme-live-codeblock'], // 交互式代码编辑器
+  themes: ['@docusaurus/theme-live-codeblock', // 交互式代码编辑器，可以在文档中插入一个 jsx 代码编辑器，可实时得到执行结果
+    '@docusaurus/theme-mermaid', // Mermaid 插件，用于绘制流程图、序列图、甘特图、饼图等
+  ], 
   presets: [
     [
       'classic',
@@ -113,6 +118,12 @@ const config: Config = {
       // 侧边栏显示 2-3 级标题
       minHeadingLevel: 2,
       maxHeadingLevel: 3,
+    },
+    mermaid: { // 设置 meraid 插件的主题样式，可以分别为亮色和黑色模式设置。
+      theme: {light: 'neutral', dark: 'forest'},
+      options: {
+        // maxTextSize: 11,
+      },
     },
     navbar: {
       title: '我的站点',
