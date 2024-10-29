@@ -84,6 +84,12 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
+    // 设置目录标题级别
+    tableOfContents: {
+      // 侧边栏显示 2-3 级标题
+      minHeadingLevel: 2,
+      maxHeadingLevel: 3,
+    },
     navbar: {
       title: '我的站点',
       logo: {
