@@ -43,7 +43,7 @@ const config: Config = {
   ], 
   presets: [
     [
-      'classic',
+      '@docusaurus/preset-classic',
       {
         docs: {
           sidebarPath: './sidebars.ts',
@@ -96,6 +96,7 @@ const config: Config = {
           remarkPlugins: [require('@docusaurus/remark-plugin-npm2yarn')],
         },
         theme: {
+          // 引入自定义全局 CSS
           customCss: './src/css/custom.css',
         },
       } satisfies Preset.Options,
