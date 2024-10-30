@@ -103,7 +103,7 @@ export default function ColorGenerator(): JSX.Element {
               ),
             }}>
             {
-              "Aim for at least {wcagLink} for the primary color to ensure readability. Use the Docusaurus website itself to preview how your color palette would look like. You can use alternative palettes in dark mode because one color doesn't usually work in both light and dark mode."
+              "目标至少达到 {wcagLink} 的主色，以确保可读性。使用 Docusaurus 网站本身来预览你的配色方案效果。由于一种颜色通常无法同时适用于明亮和暗黑模式，因此可以在暗黑模式下使用替代配色方案。"
             }
           </Translate>
         </p>
@@ -113,7 +113,7 @@ export default function ColorGenerator(): JSX.Element {
         <label htmlFor="primary_color">
           <strong className="margin-right--sm">
             <Translate id="colorGenerator.inputs.primary.label">
-              Primary Color:
+            主色：
             </Translate>
           </strong>
         </label>{' '}
@@ -141,15 +141,15 @@ export default function ColorGenerator(): JSX.Element {
             values={{
               colorMode: isDarkTheme ? (
                 <Translate id="colorGenerator.inputs.modeToggle.label.colorMode.light">
-                  light
+                  亮色
                 </Translate>
               ) : (
                 <Translate id="colorGenerator.inputs.modeToggle.label.colorMode.dark">
-                  dark
+                  暗色
                 </Translate>
               ),
             }}>
-            {'Edit {colorMode} mode'}
+            {'编辑{colorMode}模式'}
           </Translate>
         </button>
         <button
@@ -162,7 +162,7 @@ export default function ColorGenerator(): JSX.Element {
             setShades(COLOR_SHADES);
           }}>
           <Translate id="colorGenerator.inputs.resetButton.label">
-            Reset
+            重置
           </Translate>
         </button>
       </p>
@@ -171,7 +171,7 @@ export default function ColorGenerator(): JSX.Element {
         <label htmlFor="background_color">
           <strong className="margin-right--sm">
             <Translate id="colorGenerator.inputs.background.label">
-              Background:
+            背景色：
             </Translate>
           </strong>
         </label>
@@ -191,28 +191,28 @@ export default function ColorGenerator(): JSX.Element {
             <tr>
               <th>
                 <Translate id="colorGenerator.table.heading1">
-                  CSS Variable Name
+                CSS 变量名称
                 </Translate>
               </th>
               <th>
                 <Translate
                   id="colorGenerator.table.heading2"
                   description="This column is the color's representation in hex">
-                  Hex
+                  16 进制颜色
                 </Translate>
               </th>
               <th>
                 <Translate
                   id="colorGenerator.table.heading3"
                   description="This column is the adjusted shades' adjustment values relative to the primary color">
-                  Adjustment
+                  调整
                 </Translate>
               </th>
               <th>
                 <Translate
                   id="colorGenerator.table.heading4"
                   description="This column is WCAG contrast rating: AAA, AA, Fail">
-                  Contrast Rating
+                  对比度（前景和背景）
                 </Translate>
               </th>
             </tr>
@@ -282,7 +282,7 @@ export default function ColorGenerator(): JSX.Element {
           id="colorGenerator.text"
           // eslint-disable-next-line @docusaurus/no-untranslated-text
           values={{cssPath: <code>src/css/custom.css</code>}}>
-          {'Replace the variables in {cssPath} with these new variables.'}
+          {"用这些新变量替换 {cssPath} 中的变量。"}
         </Translate>
       </p>
       <CodeBlock className="language-css" title="/src/css/custom.css">

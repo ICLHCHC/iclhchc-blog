@@ -10,7 +10,7 @@ import rehypeKatex from 'rehype-katex';
 // 使用自定义的 MDX 插件
 import sectionPrefix from './src/remark/section-prefix';
 const config: Config = {
-  title: '我的网站',
+  title: 'ICLHC 的个人网站',
   tagline: '恐龙很酷🦕',
   favicon: 'img/favicon.ico',
 
@@ -19,7 +19,11 @@ const config: Config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-
+  // docusaurus 插件配置
+  plugins: [
+    // 在 docusaurus 中使用 Sass/SCSS 作为 CSS 预处理器
+    'docusaurus-plugin-sass'
+  ],
   markdown: {
     mermaid: true,
   },
@@ -98,6 +102,12 @@ const config: Config = {
         theme: {
           // 引入自定义全局 CSS
           customCss: './src/css/custom.css',
+          // 要使用 SASS 作为 CSS 预处理器
+          // 1. 需要安装这些包：docusaurus-plugin-sass sass
+          // 2. 在 docusaur.config.js 中，配置 docusaurus-plugin-sass 插件
+          // 2. 创建 SASS 版的全局样式： ./src/css/custom.scss
+          // 3. 修改 tsconfig.json ，启用 SASS 编译选项
+          // customCss: ['./src/css/custom.scss'], // 使用 sass 版的全局样式表
         },
       } satisfies Preset.Options,
     ],

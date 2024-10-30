@@ -2,6 +2,10 @@
   // This file is not used in compilation. It is here just for a nice editor experience.
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": [
+      // 为 Sass/SCSS 模块启用 TypeScript 支持
+      "docusaurus-plugin-sass"
+    ]
   }
 }
