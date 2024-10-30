@@ -1,7 +1,8 @@
 {
+    "position": 1,
     "label": "指南",
     "link": {
         "type": "generated-index",
-        "description": "Let's learn about the most important Docusaurus concepts!"
+        "description": "接下来我们学习 Docusaurus 最核心的概念!"
       }
   }

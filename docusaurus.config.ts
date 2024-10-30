@@ -24,6 +24,8 @@ const config: Config = {
     // 在 docusaurus 中使用 Sass/SCSS 作为 CSS 预处理器
     'docusaurus-plugin-sass'
   ],
+  // 自定义静态资源目录源
+  // staticDirectories: ['public', 'static'],
   markdown: {
     mermaid: true,
   },
@@ -39,8 +41,8 @@ const config: Config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'zh-Hans',
+    locales: ['zh-Hans'],
   },
   themes: ['@docusaurus/theme-live-codeblock', // 交互式代码编辑器，可以在文档中插入一个 jsx 代码编辑器，可实时得到执行结果
     '@docusaurus/theme-mermaid', // Mermaid 插件，用于绘制流程图、序列图、甘特图、饼图等
@@ -137,7 +139,7 @@ const config: Config = {
       },
     },
     navbar: {
-      title: '我的站点',
+      title: 'ICLHC 的小站',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
@@ -176,16 +178,16 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: '文档',
           items: [
             {
               label: 'Tutorial',
-              to: '/docs/intro',
+              to: '/docs/tutorial/intro',
             },
           ],
         },
         {
-          title: 'Community',
+          title: '社区',
           items: [
             {
               label: 'Stack Overflow',
@@ -202,7 +204,7 @@ const config: Config = {
           ],
         },
         {
-          title: 'More',
+          title: '更多',
           items: [
             {
               label: 'Blog',
