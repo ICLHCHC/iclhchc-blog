@@ -1,9 +1,11 @@
 ---
 sidebar_position: 1
-sidebar_label: 这是啥
+sidebar_label: 这是啥？
 ---
 
 # 
+
+Docusaurus 是一个由 Facebook 开发的开源框架，专门用于快速构建、部署和维护文档网站。支持 MDX ，可以在文档中插入 React 组件。
 
 这里翻译了一些 Docusaurus 的官方文档，主要借助 chatGPT。还有一些没有翻译，下面是翻译情况。
 
