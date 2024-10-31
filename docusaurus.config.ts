@@ -9,6 +9,11 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 // 使用自定义的 MDX 插件
 import sectionPrefix from './src/remark/section-prefix';
+
+// 设置备案信息
+const beian = "你的备案信息"; // 定义 beian 变量
+const beian1 = "你的备案信息1";
+
 const config: Config = {
   title: 'ICLHC 的个人网站',
   tagline: '恐龙很酷🦕',
@@ -22,7 +27,33 @@ const config: Config = {
   // docusaurus 插件配置
   plugins: [
     // 在 docusaurus 中使用 Sass/SCSS 作为 CSS 预处理器
-    'docusaurus-plugin-sass'
+    'docusaurus-plugin-sass',
+    // 提供图像组件
+    // import Image from '@theme/IdealImage'
+    '@docusaurus/plugin-ideal-image',
+    // 增强后的博客插件： https://github.com/kuizuo/blog/blob/main/src/plugin/plugin-content-blog/index.js
+    [
+      './src/plugin/plugin-content-blog', // 为了实现全局 blog 数据，必须改写 plugin-content-blog 插件
+      {
+        path: 'blog',
+        editUrl: ({ locale, blogDirPath, blogPath, permalink }) =>
+          `https://github.com/kuizuo/blog/edit/main/${blogDirPath}/${blogPath}`,
+        editLocalizedFiles: false,
+        blogDescription: '代码人生：编织技术与生活的博客之旅',
+        blogSidebarCount: 10,
+        blogSidebarTitle: '博文',
+        postsPerPage: 12,
+        showReadingTime: true,
+        readingTime: ({ content, frontMatter, defaultReadingTime }) =>
+          defaultReadingTime({ content, options: { wordsPerMinute: 300 } }),
+        feedOptions: {
+          type: 'all',
+          title: '愧怍',
+          description: 'feedId:41215011978385457+userId:41840354283324416',
+          copyright: `Copyright © ${new Date().getFullYear()} 愧怍 Built with Docusaurus.<p><a href="http://beian.miit.gov.cn/" class="footer_lin">${beian}</a></p>`,
+        },
+      },
+    ],
   ],
   // 自定义静态资源目录源（默认为 static）
   // staticDirectories: ['public', 'static'],
@@ -47,7 +78,7 @@ const config: Config = {
   themes: [
     '@docusaurus/theme-live-codeblock', // 交互式代码编辑器，可以在文档中插入一个 jsx 代码编辑器，可实时得到执行结果
     '@docusaurus/theme-mermaid', // Mermaid 插件，用于绘制流程图、序列图、甘特图、饼图等
-  ], 
+  ],
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -66,38 +97,41 @@ const config: Config = {
           ],
           rehypePlugins: [
             // 数学公式支持
-            [rehypeKatex, {strict: false}],
+            [rehypeKatex, { strict: false }],
           ],
           admonitions: { // 自定义警示类型组件，需要在 src/theme/Admonition/Types.js 中定义对应组件
             keywords: ['my-custom-admonition'],
             extendDefaults: true,
           },
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-          // beforeDefaultRemarkPlugins: [sectionPrefix],
-          remarkPlugins: [
-            // 命令行语法高亮插件
-            [
-              require('@docusaurus/remark-plugin-npm2yarn'),
-              { converters: ['pnpm'] },
-            ],
-            // 自定义 MDX 插件
-            // sectionPrefix,
-          ],
-        },
+        // 禁用 Docusaurus 自带的博客插件，采用增强后的博客插件
+        // 详见： https://github.com/kuizuo/blog/blob/main/src/plugin/plugin-content-blog/index.js
+        blog: false,
+        // blog: {
+        //   showReadingTime: true,
+        //   feedOptions: {
+        //     type: ['rss', 'atom'],
+        //     xslt: true,
+        //   },
+        //   // Please change this to your repo.
+        //   // Remove this to remove the "edit this page" links.
+        //   editUrl:
+        //     'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+        //   // Useful options to enforce blogging best practices
+        //   onInlineTags: 'warn',
+        //   onInlineAuthors: 'warn',
+        //   onUntruncatedBlogPosts: 'warn',
+        //   // beforeDefaultRemarkPlugins: [sectionPrefix],
+        //   remarkPlugins: [
+        //     // 命令行语法高亮插件
+        //     [
+        //       require('@docusaurus/remark-plugin-npm2yarn'),
+        //       { converters: ['pnpm'] },
+        //     ],
+        //     // 自定义 MDX 插件
+        //     // sectionPrefix,
+        //   ],
+        // },
         pages: {
           // 命令行语法高亮插件
           remarkPlugins: [require('@docusaurus/remark-plugin-npm2yarn')],
@@ -138,7 +172,7 @@ const config: Config = {
       maxHeadingLevel: 4,
     },
     mermaid: { // 设置 meraid 插件的主题样式，可以分别为亮色和黑色模式设置。
-      theme: {light: 'neutral', dark: 'forest'},
+      theme: { light: 'neutral', dark: 'forest' },
       options: {
         // maxTextSize: 11,
       },
@@ -147,16 +181,16 @@ const config: Config = {
       title: 'ICLHC 的小站',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/favicon.png',
       },
       items: [
         // 导航栏配置
-        {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'left',
-          label: '初学者教程',
-        },
+        // {
+        //   type: 'docSidebar',
+        //   sidebarId: 'tutorialSidebar',
+        //   position: 'left',
+        //   label: '各种教程',
+        // },
         {
           type: 'docSidebar',
           sidebarId: '恐龙文档',
@@ -171,9 +205,9 @@ const config: Config = {
           label: 'WebDev 学习笔记',
         }
         ,
-        { to: '/blog', label: '博客', position: 'left' },
+        { to: '/blog', label: '博客', position: 'right' },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/ICLHCHC',
           label: 'GitHub',
           position: 'right',
         },
@@ -186,43 +220,50 @@ const config: Config = {
           title: '文档',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/tutorial/intro',
+              label: 'Docusaurus',
+              to: 'https://docusaurus.io/',
             },
           ],
         },
         {
-          title: '社区',
+          title: '社交媒体',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: '关于我',
+              href: '/about',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'GitHub',
+              href: 'https://github.com/ICLHCHC',
             },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
+            // {
+            //   label: 'Discord',
+            //   href: 'https://discordapp.com/invite/docusaurus',
+            // },
+            // {
+            //   label: 'Twitter',
+            //   href: 'https://twitter.com/docusaurus',
+            // },
           ],
         },
         {
           title: '更多',
           items: [
+            // {
+            //   label: 'Blog',
+            //   to: '/blog',
+            // },
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              html: `
+                <a href="https://docusaurus.io" target="_blank" rel="noreferrer noopener">
+                  <img src="/img/buildwith.png" alt="build with docusaurus" width="120" height="50"/>
+                </a>
+                `,
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright ©   ${new Date().getFullYear()} ICLHCHC. | Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

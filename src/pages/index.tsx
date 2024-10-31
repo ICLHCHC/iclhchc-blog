@@ -8,6 +8,7 @@ import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
 import Hero from '../components/landing/Hero';
+import BlogSection from '../components/landing/BlogSection';
 import ToyHero from '../components/ToyComponents/ToyHero';
 
 function HomepageHeader() {
@@ -36,7 +37,7 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`你好${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
 
       {/* <HomepageHeader /> */}
@@ -44,7 +45,7 @@ export default function Home() {
       <main>
         <Hero/>
         {/* <HomepageFeatures /> */}
-
+        <BlogSection/>
         {/* <ToyHero
           title="欢迎来到我的网站"
           description="这是一个简单的 React Hero 组件示例。"
