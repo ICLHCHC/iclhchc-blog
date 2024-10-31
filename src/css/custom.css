@@ -1,31 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * 此处包含的任何 CSS 将是全局的。经典模板
+ * 默认包含 Infima。Infima 是一个专为
+ * 内容为中心的网站设计的 CSS 框架。
  */
 
-/* You can override the default Infima variables here. */
+/* 
+Docusaurus 有 7 种主色调，可以借助官方文档的工具生成主题色配置 Docs/Guides/Styling and Layout
+https://docusaurus.io/docs/styling-layout#styling-your-site-with-infima */
+/* 您可以在此处覆盖默认的 Infima 变量。 */
+/* 亮色模式的颜色配置 */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #1e66f5;
+  --ifm-color-primary-dark: #0b56ed;
+  --ifm-color-primary-darker: #0a52e0;
+  --ifm-color-primary-darkest: #0843b8;
+  --ifm-color-primary-light: #3878f6;
+  --ifm-color-primary-lighter: #4581f7;
+  --ifm-color-primary-lightest: #6d9cf9;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* 出于可读性的考虑，在暗模式下应选择更浅的配色方案。 */
+/* 暗色模式的颜色配置 */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #a6e3a1;
+  --ifm-color-primary-dark: #8ada83;
+  --ifm-color-primary-darker: #7cd674;
+  --ifm-color-primary-darkest: #51c847;
+  --ifm-color-primary-light: #c2ecbf;
+  --ifm-color-primary-lighter: #d0f0ce;
+  --ifm-color-primary-lightest: #fbfefb;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 

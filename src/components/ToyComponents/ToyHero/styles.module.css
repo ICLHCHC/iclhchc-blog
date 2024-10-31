@@ -1,0 +1,31 @@
+.hero {
+    text-align: center;
+    padding: 50px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .heroTitle {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .heroDescription {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .heroButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .heroButton:hover {
+    background-color: #0056b3;
+  }
+  

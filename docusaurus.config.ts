@@ -24,7 +24,7 @@ const config: Config = {
     // 在 docusaurus 中使用 Sass/SCSS 作为 CSS 预处理器
     'docusaurus-plugin-sass'
   ],
-  // 自定义静态资源目录源
+  // 自定义静态资源目录源（默认为 static）
   // staticDirectories: ['public', 'static'],
   markdown: {
     mermaid: true,
@@ -44,7 +44,8 @@ const config: Config = {
     defaultLocale: 'zh-Hans',
     locales: ['zh-Hans'],
   },
-  themes: ['@docusaurus/theme-live-codeblock', // 交互式代码编辑器，可以在文档中插入一个 jsx 代码编辑器，可实时得到执行结果
+  themes: [
+    '@docusaurus/theme-live-codeblock', // 交互式代码编辑器，可以在文档中插入一个 jsx 代码编辑器，可实时得到执行结果
     '@docusaurus/theme-mermaid', // Mermaid 插件，用于绘制流程图、序列图、甘特图、饼图等
   ], 
   presets: [
@@ -122,6 +123,10 @@ const config: Config = {
         'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
       crossorigin: 'anonymous',
     },
+    {
+      href: '/css/custom.css',
+      type: 'text/css',
+    },
   ],
   themeConfig: {
     // Replace with your project's social card
@@ -130,7 +135,7 @@ const config: Config = {
     tableOfContents: {
       // 侧边栏显示 2-3 级标题
       minHeadingLevel: 2,
-      maxHeadingLevel: 3,
+      maxHeadingLevel: 4,
     },
     mermaid: { // 设置 meraid 插件的主题样式，可以分别为亮色和黑色模式设置。
       theme: {light: 'neutral', dark: 'forest'},

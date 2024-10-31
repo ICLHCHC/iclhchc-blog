@@ -1,8 +1,8 @@
 {
-    "position": 2,
+    "position": 3,
     "label": "第三方主题",
     "link": {
-        "type": "generated-index",
-        "description": "这里搜集了一些魔改 Docusaurus 主题，可用作个人博客和知识库。此外本站还镜像了这些第三方主题的配置文档。"
+        "type": "doc",
+        "id": "index"
     }
 }

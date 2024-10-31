@@ -40,7 +40,7 @@ export default config
 
 ## sidebars.js
 
-用于配置文档的侧边栏，例如本博客中的[技术笔记](/docs/skill/)，[工具推荐](/docs/tools/)。侧边栏对应的每一项都是一个 markdown 文件，同时这些文件都存放在 docs 目录下，方便管理。
+用于配置文档的侧边栏，例如本博客中的[技术笔记](https://kuizuo.cn/docs/skill/)，[工具推荐](https://kuizuo.cn/docs/tools/)。侧边栏对应的每一项都是一个 markdown 文件，同时这些文件都存放在 docs 目录下，方便管理。
 
 [侧边栏 | Docusaurus](https://docusaurus.io/zh-CN/docs/sidebar)
 
@@ -66,7 +66,7 @@ export default config
 
 ### 友链、导航、项目 页面
 
-这三个页面是通过 [plugin-content-pages](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-pages) 实现自定义页面的，如果想了解页面的实现可以看[自定义页面](/docs/docusaurus-style#自定义页面)
+这三个页面是通过 [plugin-content-pages](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-pages) 实现自定义页面的，如果想了解页面的实现可以看[自定义页面](./style.md)
 
 这里你主要关注数据部分，数据都存放至根文件夹 `/data` 下，并使用 ts 用作类型提示。这些数据最终会在这些页面中渲染，你只需要根据符合的类型定义所要展示的数据，访问对应页面就能查看到效果。
 

@@ -7,9 +7,12 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
+import Hero from '../components/landing/Hero';
+import ToyHero from '../components/ToyComponents/ToyHero';
+
 function HomepageHeader() {
   // useDocusaurusContext() 是一个 React Hook，用于访问 Docusaurus 提供的上下文信息，包含网站的各种配置和状态。
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
@@ -30,14 +33,24 @@ function HomepageHeader() {
 }
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`你好${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
+
+      {/* <HomepageHeader /> */}
+
       <main>
-        <HomepageFeatures />
+        <Hero/>
+        {/* <HomepageFeatures /> */}
+
+        {/* <ToyHero
+          title="欢迎来到我的网站"
+          description="这是一个简单的 React Hero 组件示例。"
+          buttonText="了解更多"
+        /> */}
+
       </main>
     </Layout>
   );
